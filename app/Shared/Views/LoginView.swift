@@ -11,168 +11,174 @@ import WebKit
 import WebView
 
 private class LoginViewUIDelegate: NSObject, WKUIDelegate, WKNavigationDelegate {
-  let parent: LoginView
+    let parent: LoginView
 
-  init(parent: LoginView) {
-    self.parent = parent
-    super.init()
-  }
-
-  func webView(_: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame _: WKFrameInfo, completionHandler: @escaping () -> Void) {
-    parent.alertCompletion = completionHandler
-    parent.alertMessage = message
-  }
-
-  func webView(_: WKWebView, didStartProvisionalNavigation _: WKNavigation!) {
-    setLoading(loading: true)
-  }
-
-  func webView(_ webView: WKWebView, didFinish _: WKNavigation!) {
-    guard webView.url?.absoluteString == URLs.login.absoluteString else {
-      setLoading(loading: false)
-      return
+    init(parent: LoginView) {
+        self.parent = parent
+        super.init()
     }
 
-    let hideLoginElement = """
-    function getElementByXpath(document, path) {
-      return document.evaluate(path, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+    func webView(_: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame _: WKFrameInfo, completionHandler: @escaping () -> Void) {
+        parent.alertCompletion = completionHandler
+        parent.alertMessage = message
     }
-    let iframe = document.getElementById("iff")
 
-    let loginXpath = '//*[@id="main"]/div/div[3]/a[2]'
-    let loginElement = getElementByXpath(iframe.contentDocument, loginXpath)
-    loginElement.click()
-
-    let xpaths = [
-      '//*[@id="main"]/div/div[last()-1]', // Register
-      '//*[@id="main"]/div/span[last()]',  // EULA
-      '//*[@id="main"]/div/a[2]',          // QRCode login
-      '//*[@id="main"]/div/div[last()]',   // 3rd party login
-    ]
-
-    for (let xpath of xpaths) {
-      let element = getElementByXpath(iframe.contentDocument, xpath)
-      element.parentElement.removeChild(element)
+    func webView(_: WKWebView, didStartProvisionalNavigation _: WKNavigation!) {
+        setLoading(loading: true)
     }
-    """
 
-    webView.evaluateJavaScript(hideLoginElement) { _, _ in
-      self.setLoading(loading: false)
-    }
-  }
+    func webView(_ webView: WKWebView, didFinish _: WKNavigation!) {
+        guard webView.url?.absoluteString == URLs.login.absoluteString else {
+            setLoading(loading: false)
+            return
+        }
 
-  func setLoading(loading: Bool) {
-    DispatchQueue.main.async {
-      withAnimation {
-        self.parent.loading = loading
-      }
+        let hideLoginElement = """
+        function getElementByXpath(document, path) {
+          return document.evaluate(path, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+        }
+        let iframe = document.getElementById("iff")
+
+        let loginXpath = '//*[@id="main"]/div/div[3]/a[2]'
+        let loginElement = getElementByXpath(iframe.contentDocument, loginXpath)
+        loginElement.click()
+
+        let xpaths = [
+          '//*[@id="main"]/div/div[last()-1]', // Register
+          '//*[@id="main"]/div/span[last()]',  // EULA
+          '//*[@id="main"]/div/a[2]',          // QRCode login
+          '//*[@id="main"]/div/div[last()]',   // 3rd party login
+        ]
+
+        for (let xpath of xpaths) {
+          let element = getElementByXpath(iframe.contentDocument, xpath)
+          element.parentElement.removeChild(element)
+        }
+        """
+
+        webView.evaluateJavaScript(hideLoginElement) { _, _ in
+            self.setLoading(loading: false)
+        }
     }
-  }
+
+    func setLoading(loading: Bool) {
+        DispatchQueue.main.async {
+            withAnimation {
+                self.parent.loading = loading
+            }
+        }
+    }
 }
 
 struct LoginView: View {
-  @StateObject var authStorage = AuthStorage.shared
-  @StateObject var webViewStore: WebViewStore
+    @StateObject var authStorage = AuthStorage.shared
+    @StateObject var webViewStore: WebViewStore
 
-  @State var authing = false
-  @State var loading = true
+    @State var authing = false
+    @State var loading = true
 
-  @State private var delegate: LoginViewUIDelegate? = nil
-  @State var alertMessage: String? = nil
-  @State var alertCompletion: (() -> Void)? = nil
+    @State private var delegate: LoginViewUIDelegate? = nil
+    @State var alertMessage: String? = nil
+    @State var alertCompletion: (() -> Void)? = nil
 
-  let timer = Timer.publish(every: 0.5, on: .main, in: .common).autoconnect()
+    let timer = Timer.publish(every: 0.5, on: .main, in: .common).autoconnect()
 
-  init() {
-    let configuration = WKWebViewConfiguration()
-    configuration.websiteDataStore = WKWebsiteDataStore.nonPersistent()
-    let webView = WKWebView(frame: .zero, configuration: configuration)
-    _webViewStore = StateObject(wrappedValue: WebViewStore(webView: webView))
-  }
+    init() {
+        let configuration = WKWebViewConfiguration()
+        configuration.websiteDataStore = WKWebsiteDataStore.nonPersistent()
+        let webView = WKWebView(frame: .zero, configuration: configuration)
+        _webViewStore = StateObject(wrappedValue: WebViewStore(webView: webView))
+    }
 
-  @ToolbarContentBuilder
-  var toolbar: some ToolbarContent {
-    ToolbarItem(placement: .cancellationAction) { Button(action: close) { Text("Cancel") } }
-    ToolbarItem(placement: .mayNavigationBarTrailing) { if authing { ProgressView() } }
-    ToolbarItem(placement: .status) { Button(action: { self.load(url: URLs.login) }) { Text("Sign In") } }
-    ToolbarItem(placement: .status) { Button(action: { self.load(url: URLs.agreement) }) { Text("Agreement") } }
-    ToolbarItem(placement: .status) { Button(action: { self.load(url: URLs.privacy) }) { Text("Privacy") } }
-  }
+    @ToolbarContentBuilder
+    var toolbar: some ToolbarContent {
+        ToolbarItem(placement: .cancellationAction) { Button(action: close) { Text("Cancel") } }
+        ToolbarItem(placement: .mayNavigationBarTrailing) { if authing { ProgressView() } }
+        ToolbarItem(placement: .status) { Button(action: { self.load(url: URLs.login) }) { Text("Sign In") } }
+        ToolbarItem(placement: .status) { Button(action: { self.load(url: URLs.agreement) }) { Text("Agreement") } }
+        ToolbarItem(placement: .status) { Button(action: { self.load(url: URLs.privacy) }) { Text("Privacy") } }
+    }
 
-  func load(url: URL) {
-    webViewStore.webView.load(URLRequest(url: url))
-  }
+    func load(url: URL) {
+        webViewStore.webView.load(URLRequest(url: url))
+    }
 
-  @ViewBuilder
-  var webView: some View {
-    WebView(webView: webViewStore.webView)
-      .onAppear {
-        self.delegate = .init(parent: self)
-        self.webViewStore.webView.load(URLRequest(url: URLs.login))
-        self.webViewStore.webView.uiDelegate = self.delegate
-        self.webViewStore.webView.navigationDelegate = self.delegate
-        self.load(url: URLs.login)
-      }.onReceive(timer) { _ in
-        self.webViewStore.configuration.websiteDataStore.httpCookieStore.getAllCookies(authWithCookies)
-      }.navigationTitleInline(key: "Sign in to NGA")
-  }
+    @ViewBuilder
+    var webView: some View {
+        WebView(webView: webViewStore.webView)
+            .onAppear {
+                self.delegate = .init(parent: self)
+                self.webViewStore.webView.load(URLRequest(url: URLs.login))
+                self.webViewStore.webView.uiDelegate = self.delegate
+                self.webViewStore.webView.navigationDelegate = self.delegate
+                self.load(url: URLs.login)
+            }.onReceive(timer) { _ in
+                self.webViewStore.configuration.websiteDataStore.httpCookieStore.getAllCookies(authWithCookies)
+            }.navigationTitleInline(key: "Sign in to NGA")
+    }
 
-  @ViewBuilder
-  var inner: some View {
-    ZStack {
-      webView.opacity(loading ? 0.0 : 1.0)
-      ProgressView().hidden(!loading)
-    }.toolbar { toolbar }
-      .alert(isPresented: $alertMessage.isNotNil()) { Alert(title: "From NGA".localized, message: alertMessage) }
-      .onChange(of: alertMessage) { if $0 == nil, let c = alertCompletion { c(); alertCompletion = nil } }
-  }
+    @ViewBuilder
+    var inner: some View {
+        ZStack {
+            webView.opacity(loading ? 0.0 : 1.0)
+            ProgressView().hidden(!loading)
+        }.toolbar { toolbar }
+        #if os(iOS)
+            .alert(isPresented: $alertMessage.isNotNil()) { Alert(title: "From NGA".localized, message: alertMessage) }
+        #elseif os(macOS)
+            .alert("sth here", isPresented: $alertMessage.isNotNil()) {} message: {
+                Text(alertMessage ?? "some error should be here")
+            }
+        #endif
+            .onChange(of: alertMessage) { if $0 == nil, let c = alertCompletion { c(); alertCompletion = nil } }
+    }
 
-  var body: some View {
-    #if os(iOS)
-      NavigationView {
-        inner
-      }
-    #elseif os(macOS)
-      inner.frame(width: 300, height: 450)
-    #endif
-  }
+    var body: some View {
+        #if os(iOS)
+            NavigationView {
+                inner
+            }
+        #elseif os(macOS)
+            inner.frame(width: 400, height: 600)
+        #endif
+    }
 
-  func authWithCookies(_ cookies: [HTTPCookie]) {
-    guard let uid = cookies.first(where: { $0.name == "ngaPassportUid" })?.value else { return }
-    guard let token = cookies.first(where: { $0.name == "ngaPassportCid" })?.value else { return }
+    func authWithCookies(_ cookies: [HTTPCookie]) {
+        guard let uid = cookies.first(where: { $0.name == "ngaPassportUid" })?.value else { return }
+        guard let token = cookies.first(where: { $0.name == "ngaPassportCid" })?.value else { return }
 
-    authing = true
-    authStorage.setCurrentAuth(AuthInfo.with {
-      $0.uid = uid
-      $0.token = token
-    })
-  }
+        authing = true
+        authStorage.setCurrentAuth(AuthInfo.with {
+            $0.uid = uid
+            $0.token = token
+        })
+    }
 
-  func close() {
-    authStorage.isSigning = false
-  }
+    func close() {
+        authStorage.isSigning = false
+    }
 }
 
 private struct LoginPreviewView: View {
-  @EnvironmentObject var authStorage: AuthStorage
+    @EnvironmentObject var authStorage: AuthStorage
 
-  var body: some View {
-    NavigationView {
-      VStack {
-        Text("Authed as '\(authStorage.authInfo.uid)'")
-        Button(action: { authStorage.isSigning = true }) {
-          Text("Show")
+    var body: some View {
+        NavigationView {
+            VStack {
+                Text("Authed as '\(authStorage.authInfo.uid)'")
+                Button(action: { authStorage.isSigning = true }) {
+                    Text("Show")
+                }
+            }.sheet(isPresented: $authStorage.isSigning, content: {
+                LoginView()
+            })
         }
-      }.sheet(isPresented: $authStorage.isSigning, content: {
-        LoginView()
-      })
     }
-  }
 }
 
 struct LoginView_Previews: PreviewProvider {
-  static var previews: some View {
-    LoginPreviewView()
-      .environmentObject(AuthStorage())
-  }
+    static var previews: some View {
+        LoginPreviewView()
+            .environmentObject(AuthStorage())
+    }
 }

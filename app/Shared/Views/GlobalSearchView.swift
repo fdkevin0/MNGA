@@ -128,13 +128,22 @@ struct GlobalSearchView: View {
         Section(header: Text("Search \"\(model.text)\" in...")) {
           NavigationLink(destination: ForumSearchView(dataSource: ds.forum)) {
             Label("All Forums", systemImage: "square.stack.3d.down.right")
-          }.isDetailLink(false)
+          }
+#if os(iOS)
+          .isDetailLink(false)
+#endif
           NavigationLink(destination: TopicSearchView(dataSource: ds.topic).navigationTitle("Topic Search")) {
             Label("All Topics", systemImage: "doc.richtext")
-          }.isDetailLink(false)
+          }
+#if os(iOS)
+          .isDetailLink(false)
+#endif
           NavigationLink(destination: UserSearchView(dataSource: ds.user)) {
             Label("All Users", systemImage: "person.2")
-          }.isDetailLink(false)
+          }
+#if os(iOS)
+          .isDetailLink(false)
+#endif
         }
       }
     }.mayInsetGroupedListStyle()

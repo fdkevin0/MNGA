@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		375E675E5D65ECFBF0231735 /* MNGAApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 375E6730A9F56C0953D5C7DA /* MNGAApp.swift */; };
+		4D0FA0E6290059D4008A8DC2 /* CombineExt in Frameworks */ = {isa = PBXBuildFile; productRef = 4D0FA0E5290059D4008A8DC2 /* CombineExt */; };
+		4D0FA0E8290059E2008A8DC2 /* Crossroad in Frameworks */ = {isa = PBXBuildFile; productRef = 4D0FA0E7290059E2008A8DC2 /* Crossroad */; };
 		B402308226EBB72C0077D3AA /* UserProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B402308126EBB72C0077D3AA /* UserProfileView.swift */; };
 		B402308326EBB72C0077D3AA /* UserProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B402308126EBB72C0077D3AA /* UserProfileView.swift */; };
 		B402308526EBBA7A0077D3AA /* UserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B402308426EBBA7A0077D3AA /* UserView.swift */; };
@@ -98,7 +100,6 @@
 		B42BA73B27205465004D46EB /* PostEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42BA73A27205465004D46EB /* PostEditorView.swift */; };
 		B42BA73C27205465004D46EB /* PostEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42BA73A27205465004D46EB /* PostEditorView.swift */; };
 		B42BA73E2720561D004D46EB /* ContentEditorModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42BA73D2720561D004D46EB /* ContentEditorModel.swift */; };
-		B42BA73F2720561D004D46EB /* ContentEditorModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42BA73D2720561D004D46EB /* ContentEditorModel.swift */; };
 		B42BA74127205943004D46EB /* ShortMessageEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42BA74027205943004D46EB /* ShortMessageEditorView.swift */; };
 		B42BA74227205943004D46EB /* ShortMessageEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42BA74027205943004D46EB /* ShortMessageEditorView.swift */; };
 		B437B279269B09DC0092FF9E /* SwiftUIRefresh in Frameworks */ = {isa = PBXBuildFile; productRef = B437B278269B09DC0092FF9E /* SwiftUIRefresh */; };
@@ -506,6 +507,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				B412F709268DFC4F00EB0614 /* Logging in Frameworks */,
+				4D0FA0E8290059E2008A8DC2 /* Crossroad in Frameworks */,
+				4D0FA0E6290059D4008A8DC2 /* CombineExt in Frameworks */,
 				B4C7F015273EE4F200F64A88 /* logic-macos.xcframework in Frameworks */,
 				B45819C9268D9B6300999830 /* SDWebImageSwiftUI in Frameworks */,
 				B4EA15502740F30000C0308B /* AlertToast in Frameworks */,
@@ -932,6 +935,8 @@
 				B404C496270C71F600FF1743 /* Colorful */,
 				B404C4A7270C8E1000FF1743 /* Introspect */,
 				B4EA154F2740F30000C0308B /* AlertToast */,
+				4D0FA0E5290059D4008A8DC2 /* CombineExt */,
+				4D0FA0E7290059E2008A8DC2 /* Crossroad */,
 			);
 			productName = "NGA (macOS)";
 			productReference = B4C024D026884FD700E53554 /* MNGA.app */;
@@ -1206,7 +1211,6 @@
 				B4521B712724141F00258640 /* CurrentUserModel.swift in Sources */,
 				B45A9E8C26A171720088F04D /* GenericEditorView.swift in Sources */,
 				B413D67F2705E47800993DA2 /* WebOrAsyncImage.swift in Sources */,
-				B42BA73F2720561D004D46EB /* ContentEditorModel.swift in Sources */,
 				B41BC0E3271DD23500DD05F2 /* ShortMessagePostRowView.swift in Sources */,
 				B4F9F98E26F0CCA700D5ED1E /* PresendAttachmentsModel.swift in Sources */,
 				B42BA735271FDE3F004D46EB /* Appearance.swift in Sources */,
@@ -1644,7 +1648,7 @@
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = 87F9J2DF6R;
+				DEVELOPMENT_TEAM = Y35Z34WJ4N;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = macOS/Info.plist;
@@ -1654,7 +1658,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = "$(inherited)";
 				MARKETING_VERSION = 1.1.2;
-				PRODUCT_BUNDLE_IDENTIFIER = com.bugenzhao.MNGA;
+				PRODUCT_BUNDLE_IDENTIFIER = com.fdkevin.MNGA;
 				PRODUCT_NAME = MNGA;
 				SDKROOT = macosx;
 				SWIFT_VERSION = 5.0;
@@ -1670,7 +1674,7 @@
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = 87F9J2DF6R;
+				DEVELOPMENT_TEAM = Y35Z34WJ4N;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = macOS/Info.plist;
@@ -1680,7 +1684,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = "$(inherited)";
 				MARKETING_VERSION = 1.1.2;
-				PRODUCT_BUNDLE_IDENTIFIER = com.bugenzhao.MNGA;
+				PRODUCT_BUNDLE_IDENTIFIER = com.fdkevin.MNGA;
 				PRODUCT_NAME = MNGA;
 				SDKROOT = macosx;
 				SWIFT_VERSION = 5.0;
@@ -1845,6 +1849,16 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		4D0FA0E5290059D4008A8DC2 /* CombineExt */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B41BC0DB271C7E5C00DD05F2 /* XCRemoteSwiftPackageReference "CombineExt" */;
+			productName = CombineExt;
+		};
+		4D0FA0E7290059E2008A8DC2 /* Crossroad */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B4BDE1362746A5F300F0607E /* XCRemoteSwiftPackageReference "Crossroad" */;
+			productName = Crossroad;
+		};
 		B404C494270C71DC00FF1743 /* BetterSafariView */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = B409252426D29F6C00BCB666 /* XCRemoteSwiftPackageReference "BetterSafariView" */;

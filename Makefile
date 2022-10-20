@@ -14,7 +14,7 @@ else
 endif
 IOS_TARGET = aarch64-apple-ios
 IOS_ALL_TARGETS = ${IOS_TARGET} ${IOS_SIM_TARGET}
-MACOS_ALL_TARGETS = aarch64-apple-darwin x86_64-apple-darwin
+MACOS_ALL_TARGETS = aarch64-apple-darwin #x86_64-apple-darwin
 CATALYST_TARGET = x86_64-apple-ios-macabi
 
 ALL_TARGETS ?= unspecified-target
@@ -50,7 +50,7 @@ logic-deploy:
 logic-macos-%:
 	make logic-macos MODE=$*
 logic-macos:
-	make logic-lipo ALL_TARGETS="${MACOS_ALL_TARGETS}"
+	make logic ALL_TARGETS="${MACOS_ALL_TARGETS}"
 
 logic-catalyst-%:
 	make logic-catalyst MODE=$*
