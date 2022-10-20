@@ -14,7 +14,7 @@ else
 endif
 IOS_TARGET = aarch64-apple-ios
 IOS_ALL_TARGETS = ${IOS_TARGET} ${IOS_SIM_TARGET}
-MACOS_ALL_TARGETS = aarch64-apple-darwin #x86_64-apple-darwin
+MACOS_ALL_TARGETS = aarch64-apple-darwin x86_64-apple-darwin
 CATALYST_TARGET = x86_64-apple-ios-macabi
 
 ALL_TARGETS ?= unspecified-target
@@ -50,7 +50,7 @@ logic-deploy:
 logic-macos-%:
 	make logic-macos MODE=$*
 logic-macos:
-	make logic ALL_TARGETS="${MACOS_ALL_TARGETS}"
+	make logic-lipo ALL_TARGETS="${MACOS_ALL_TARGETS}" CARGO_MODE_ARG="--release"
 
 logic-catalyst-%:
 	make logic-catalyst MODE=$*
@@ -62,7 +62,7 @@ logic: swift-pb build-logic create-framework
 logic-lipo:
 	@make swift-pb
 	@make build-logic-lipo
-	@make create-framework ALL_TARGETS=universal
+	@make create-framework ALL_TARGETS=universal MODE=release
 
 swift-pb:
 	@echo ">>>>> Swift PB"
